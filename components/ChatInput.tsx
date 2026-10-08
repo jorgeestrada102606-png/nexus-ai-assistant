@@ -48,7 +48,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
 
   return (
     <div className="w-full max-w-3xl mx-auto px-4 pb-4 pt-1 flex flex-col gap-2">
-      <div className="relative flex items-end gap-2 bg-[#0c1422] border border-cyan-950/80 hover:border-cyan-500/30 focus-within:border-cyan-400/60 focus-within:ring-2 focus-within:ring-cyan-500/20 rounded-2xl p-2.5 shadow-xl shadow-black/40 transition-all">
+      <div className="relative flex items-end gap-2 bg-[#091A12] border border-[#00F5A0]/20 hover:border-[#00F5A0]/40 focus-within:border-[#00F5A0]/60 focus-within:ring-2 focus-within:ring-[#00F5A0]/20 rounded-2xl p-2.5 shadow-xl shadow-black/50 transition-all">
         <textarea
           ref={textareaRef}
           rows={1}
@@ -56,8 +56,8 @@ export const ChatInput: React.FC<ChatInputProps> = ({
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           disabled={isLoading || disabled}
-          placeholder="Escriba una directiva para NEXUS... (Shift + Enter para nueva línea)"
-          className="flex-1 bg-transparent text-slate-100 placeholder-slate-500 text-sm focus:outline-none resize-none leading-relaxed py-1.5 px-2 max-h-44 disabled:opacity-50"
+          placeholder="Escribe tu mensaje, bro... (Shift + Enter para nueva línea)"
+          className="flex-1 bg-transparent text-slate-100 placeholder-emerald-400/40 text-sm focus:outline-none resize-none leading-relaxed py-1.5 px-2 max-h-44 disabled:opacity-50"
         />
 
         <div className="flex items-center gap-1.5 pb-0.5">
@@ -67,10 +67,10 @@ export const ChatInput: React.FC<ChatInputProps> = ({
               type="button"
               className={`p-2 rounded-xl transition-all ${
                 voiceEnabled
-                  ? 'text-cyan-400 hover:bg-cyan-500/10'
+                  ? 'text-[#00F5A0] hover:bg-[#00F5A0]/15'
                   : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'
               }`}
-              title={voiceEnabled ? 'Voz activada: NEXUS vocalizará la respuesta' : 'Voz silenciada'}
+              title={voiceEnabled ? 'Voz activada: Nexus hablará la respuesta' : 'Voz silenciada'}
             >
               {voiceEnabled ? (
                 <Volume2 className="w-4 h-4" />
@@ -83,25 +83,25 @@ export const ChatInput: React.FC<ChatInputProps> = ({
           <button
             onClick={handleSend}
             disabled={!input.trim() || isLoading || disabled}
-            className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 disabled:from-slate-800 disabled:to-slate-800 text-slate-950 disabled:text-slate-500 flex items-center justify-center transition-all flex-shrink-0 active:scale-95 shadow-md shadow-cyan-500/20 disabled:shadow-none"
-            title="Transmitir a NEXUS"
-            aria-label="Transmitir a NEXUS"
+            className="w-9 h-9 rounded-xl bg-[#00F5A0] hover:bg-[#05DF72] disabled:bg-slate-800 text-[#04160E] disabled:text-slate-500 flex items-center justify-center transition-all flex-shrink-0 active:scale-95 shadow-md shadow-[#00F5A0]/30 disabled:shadow-none"
+            title="Enviar a NEXUS"
+            aria-label="Enviar a NEXUS"
           >
             {isLoading ? (
-              <Loader2 className="w-4 h-4 animate-spin text-cyan-200" />
+              <Loader2 className="w-4 h-4 animate-spin text-[#04160E]" />
             ) : (
-              <ArrowUp className="w-4 h-4 stroke-[2.5]" />
+              <ArrowUp className="w-4 h-4 stroke-[3]" />
             )}
           </button>
         </div>
       </div>
 
-      <div className="flex items-center justify-between text-[11px] text-slate-500 px-1 font-mono">
+      <div className="flex items-center justify-between text-[11px] text-emerald-400/60 px-1 font-mono">
         <span className="flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-          <span>NEXUS // JARVIS PROTOCOL</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-[#00F5A0] animate-pulse" />
+          <span>NEXUS // COMPA AI</span>
         </span>
-        <span>Enter para enviar</span>
+        <span>Enter para mandar</span>
       </div>
     </div>
   );

@@ -39,7 +39,7 @@ export async function POST(req: Request) {
 
     const systemInstruction =
       settings?.systemInstruction ||
-      'Eres un asistente de inteligencia artificial amable, útil y perspicaz. Responde de forma clara, natural y concisa en español a menos que el usuario indique lo contrario.';
+      'Eres NEXUS, un asistente inteligente que habla como un estudiante joven mexicano relajado, directo y amigable con sus compas. Usa expresiones como we, bro, paro, sobres, en corto, pero naturales sin exagerar. Ve al grano, explica sencillo y da soluciones prácticas.';
 
     // Model fallback chain: try preferred model first, then reliable fallbacks
     const preferredModel = settings?.modelName || 'gemini-3.5-flash';

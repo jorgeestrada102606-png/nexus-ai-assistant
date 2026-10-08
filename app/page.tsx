@@ -283,7 +283,7 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-[#070B12] text-slate-100 font-sans selection:bg-cyan-500/30 selection:text-cyan-200">
+    <div className="flex h-screen w-screen overflow-hidden bg-[#060E0A] text-slate-100 font-sans selection:bg-[#00F5A0]/30 selection:text-[#00F5A0]">
       {/* 1. Left Sidebar */}
       <Sidebar
         sessions={sessions}
@@ -299,7 +299,7 @@ export default function ChatPage() {
       />
 
       {/* 2. Main Workspace */}
-      <div className="flex-1 flex flex-col h-full overflow-hidden bg-[#070B12]">
+      <div className="flex-1 flex flex-col h-full overflow-hidden bg-[#060E0A]">
         {/* Top Navbar */}
         <Navbar
           onToggleSidebar={() => {
@@ -340,10 +340,10 @@ export default function ChatPage() {
                 <div className="flex justify-end pb-2">
                   <button
                     onClick={handleClearCurrentChat}
-                    className="flex items-center gap-1 font-mono text-[11px] text-slate-500 hover:text-rose-400 transition-colors"
+                    className="flex items-center gap-1 font-mono text-[11px] text-emerald-400/60 hover:text-rose-400 transition-colors"
                   >
                     <Trash2 className="w-3 h-3" />
-                    <span>Reiniciar directiva actual</span>
+                    <span>Reiniciar este chat</span>
                   </button>
                 </div>
               )}
@@ -362,12 +362,12 @@ export default function ChatPage() {
               {/* In-flight Loading Indicator */}
               {isLoading && (
                 <div className="flex items-center gap-3 my-4 pl-1 animate-in fade-in duration-200 font-mono">
-                  <div className="w-8 h-8 rounded-xl bg-cyan-950/60 border border-cyan-400/40 flex items-center justify-center text-cyan-400 shadow-md shadow-cyan-500/20">
-                    <Loader2 className="w-4 h-4 animate-spin text-cyan-400" />
+                  <div className="w-8 h-8 rounded-xl bg-[#082216] border border-[#00F5A0]/40 flex items-center justify-center text-[#00F5A0] shadow-md shadow-[#00F5A0]/20">
+                    <Loader2 className="w-4 h-4 animate-spin text-[#00F5A0]" />
                   </div>
-                  <div className="text-xs text-cyan-300 font-medium flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
-                    <span>NEXUS sintetizando respuesta...</span>
+                  <div className="text-xs text-[#00F5A0] font-medium flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#00F5A0] animate-ping" />
+                    <span>NEXUS armando la respuesta...</span>
                   </div>
                 </div>
               )}

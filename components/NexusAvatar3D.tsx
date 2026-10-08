@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { Volume2, VolumeX, Sparkles, Square, Play } from 'lucide-react';
+import { Volume2, VolumeX, Square, Play } from 'lucide-react';
 
 interface NexusAvatar3DProps {
   isSpeaking: boolean;
@@ -22,7 +22,6 @@ export const NexusAvatar3D: React.FC<NexusAvatar3DProps> = ({
   const mountRef = useRef<HTMLDivElement>(null);
   const isSpeakingRef = useRef<boolean>(isSpeaking);
 
-  // Keep ref synchronized with prop for the requestAnimationFrame loop
   useEffect(() => {
     isSpeakingRef.current = isSpeaking;
   }, [isSpeaking]);
@@ -45,15 +44,15 @@ export const NexusAvatar3D: React.FC<NexusAvatar3DProps> = ({
     container.innerHTML = '';
     container.appendChild(renderer.domElement);
 
-    // 2. Holographic Materials
-    const cyanColor = 0x00f0ff;
-    const coreBlueColor = 0x3b82f6;
-    const brightWhite = 0xffffff;
+    // 2. Bioluminescent Mint / Emerald Theme Colors
+    const mintColor = 0x00F5A0;
+    const emeraldColor = 0x05DF72;
+    const tealColor = 0x10B981;
 
     // Inner Glowing Core (Nucleus)
     const coreGeometry = new THREE.SphereGeometry(0.7, 32, 32);
     const coreMaterial = new THREE.MeshBasicMaterial({
-      color: coreBlueColor,
+      color: emeraldColor,
       wireframe: true,
       transparent: true,
       opacity: 0.75,
@@ -64,27 +63,27 @@ export const NexusAvatar3D: React.FC<NexusAvatar3DProps> = ({
     // Inner Solid Glow Center
     const innerCenterGeom = new THREE.SphereGeometry(0.38, 16, 16);
     const innerCenterMat = new THREE.MeshBasicMaterial({
-      color: cyanColor,
+      color: mintColor,
       transparent: true,
       opacity: 0.9,
     });
     const innerCenter = new THREE.Mesh(innerCenterGeom, innerCenterMat);
     scene.add(innerCenter);
 
-    // Orbital Ring 1 (Horizontal Arc)
+    // Orbital Ring 1
     const ring1Geom = new THREE.TorusGeometry(1.2, 0.022, 16, 100);
     const ring1Mat = new THREE.MeshBasicMaterial({
-      color: cyanColor,
+      color: mintColor,
       transparent: true,
       opacity: 0.85,
     });
     const ring1 = new THREE.Mesh(ring1Geom, ring1Mat);
     scene.add(ring1);
 
-    // Orbital Ring 2 (Vertical Arc)
+    // Orbital Ring 2
     const ring2Geom = new THREE.TorusGeometry(1.4, 0.018, 16, 100);
     const ring2Mat = new THREE.MeshBasicMaterial({
-      color: coreBlueColor,
+      color: tealColor,
       transparent: true,
       opacity: 0.7,
     });
@@ -92,10 +91,10 @@ export const NexusAvatar3D: React.FC<NexusAvatar3DProps> = ({
     ring2.rotation.x = Math.PI / 3;
     scene.add(ring2);
 
-    // Orbital Ring 3 (Outer Diagonal Arc)
+    // Orbital Ring 3
     const ring3Geom = new THREE.TorusGeometry(1.65, 0.015, 16, 100);
     const ring3Mat = new THREE.MeshBasicMaterial({
-      color: 0x60a5fa,
+      color: 0x34D399,
       transparent: true,
       opacity: 0.5,
     });
@@ -121,7 +120,7 @@ export const NexusAvatar3D: React.FC<NexusAvatar3DProps> = ({
     particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
     const particleMaterial = new THREE.PointsMaterial({
-      color: cyanColor,
+      color: mintColor,
       size: 0.038,
       transparent: true,
       opacity: 0.7,
@@ -129,7 +128,7 @@ export const NexusAvatar3D: React.FC<NexusAvatar3DProps> = ({
     const particles = new THREE.Points(particleGeometry, particleMaterial);
     scene.add(particles);
 
-    // Mouse movement interaction
+    // Mouse tilt interaction
     let mouseX = 0;
     let mouseY = 0;
     const handleMouseMove = (e: MouseEvent) => {
@@ -148,19 +147,16 @@ export const NexusAvatar3D: React.FC<NexusAvatar3DProps> = ({
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
 
-      // CRITICAL REQUIREMENT:
-      // "que se mueva cuando y solo cuando hable con voz"
+      // ONLY moves when speaking!
       const speaking = isSpeakingRef.current;
 
       if (speaking) {
         time += 0.055;
 
-        // Dynamic 3D motion while speaking
         const pulse = 1 + Math.sin(time * 6) * 0.12 + Math.cos(time * 9) * 0.05;
         coreMesh.scale.set(pulse, pulse, pulse);
         innerCenter.scale.set(pulse * 1.05, pulse * 1.05, pulse * 1.05);
 
-        // Multi-axis rotation of gimbal rings
         ring1.rotation.z += 0.035;
         ring1.rotation.x += 0.015;
 
@@ -170,17 +166,14 @@ export const NexusAvatar3D: React.FC<NexusAvatar3DProps> = ({
         ring3.rotation.x -= 0.025;
         ring3.rotation.y -= 0.03;
 
-        // Revolving particle cloud
         particles.rotation.y += 0.02;
         particles.rotation.x += 0.01;
 
-        // Color intensity while speaking
         coreMaterial.opacity = 0.95;
         innerCenterMat.opacity = 1.0;
         ring1Mat.opacity = 0.95;
       } else {
-        // Dormant / Rest state: Completely static / minimal resting posture
-        // As requested: Only moves when speaking!
+        // Dormant / resting state
         coreMesh.scale.set(1, 1, 1);
         innerCenter.scale.set(1, 1, 1);
         coreMaterial.opacity = 0.45;
@@ -190,7 +183,6 @@ export const NexusAvatar3D: React.FC<NexusAvatar3DProps> = ({
         ring3Mat.opacity = 0.25;
       }
 
-      // Camera smoothly tracks subtle mouse perspective
       camera.position.x += (mouseX - camera.position.x) * 0.05;
       camera.position.y += (mouseY - camera.position.y) * 0.05;
       camera.lookAt(scene.position);
@@ -231,28 +223,28 @@ export const NexusAvatar3D: React.FC<NexusAvatar3DProps> = ({
   }, []);
 
   return (
-    <div className="relative rounded-2xl bg-gradient-to-b from-[#0e1626]/90 to-[#090e17]/95 border border-cyan-500/25 p-4 shadow-xl shadow-cyan-950/20 backdrop-blur-md flex flex-col items-center select-none overflow-hidden group">
-      {/* Subtle Arc-reactor background aura */}
+    <div className="relative rounded-2xl bg-gradient-to-b from-[#0D1E16]/90 to-[#07130D]/95 border border-[#00F5A0]/25 p-4 shadow-xl shadow-emerald-950/30 backdrop-blur-md flex flex-col items-center select-none overflow-hidden group">
+      {/* Bioluminescent aura background */}
       <div
-        className={`absolute -top-12 -left-12 w-48 h-48 rounded-full bg-cyan-500/15 blur-3xl transition-opacity duration-500 pointer-events-none ${
+        className={`absolute -top-12 -left-12 w-48 h-48 rounded-full bg-[#00F5A0]/15 blur-3xl transition-opacity duration-500 pointer-events-none ${
           isSpeaking ? 'opacity-90 scale-125' : 'opacity-25'
         }`}
       />
       <div
-        className={`absolute -bottom-12 -right-12 w-48 h-48 rounded-full bg-blue-600/15 blur-3xl transition-opacity duration-500 pointer-events-none ${
+        className={`absolute -bottom-12 -right-12 w-48 h-48 rounded-full bg-[#05DF72]/15 blur-3xl transition-opacity duration-500 pointer-events-none ${
           isSpeaking ? 'opacity-90 scale-125' : 'opacity-25'
         }`}
       />
 
       {/* Top HUD Header */}
-      <div className="w-full flex items-center justify-between z-10 pb-1 border-b border-cyan-500/15 font-mono text-[11px]">
+      <div className="w-full flex items-center justify-between z-10 pb-1 border-b border-[#00F5A0]/15 font-mono text-[11px]">
         <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-cyan-400 relative">
+          <div className="w-2 h-2 rounded-full bg-[#00F5A0] relative">
             {isSpeaking && (
-              <span className="absolute inset-0 rounded-full bg-cyan-400 animate-ping opacity-75" />
+              <span className="absolute inset-0 rounded-full bg-[#00F5A0] animate-ping opacity-75" />
             )}
           </div>
-          <span className="font-bold tracking-wider text-cyan-300 drop-shadow-[0_0_8px_rgba(0,240,255,0.4)]">
+          <span className="font-bold tracking-wider text-[#00F5A0] drop-shadow-[0_0_8px_rgba(0,245,160,0.5)]">
             NEXUS // CORE 3D
           </span>
         </div>
@@ -260,18 +252,17 @@ export const NexusAvatar3D: React.FC<NexusAvatar3DProps> = ({
         {/* Real-time Status Badge */}
         <div className="flex items-center gap-1.5">
           {isSpeaking ? (
-            <div className="flex items-center gap-1 text-emerald-400 font-semibold px-2 py-0.5 rounded-full bg-emerald-950/50 border border-emerald-500/30">
-              {/* Animated Equalizer bars */}
+            <div className="flex items-center gap-1.5 text-[#00F5A0] font-semibold px-2.5 py-0.5 rounded-full bg-[#082216] border border-[#00F5A0]/40">
               <div className="flex items-center gap-0.5 h-3">
-                <span className="w-0.5 h-full bg-emerald-400 animate-bounce" />
-                <span className="w-0.5 h-2/3 bg-emerald-400 animate-pulse" />
-                <span className="w-0.5 h-full bg-emerald-400 animate-bounce" style={{ animationDelay: '0.15s' }} />
-                <span className="w-0.5 h-1/2 bg-emerald-400 animate-pulse" />
+                <span className="w-0.5 h-full bg-[#00F5A0] animate-bounce" />
+                <span className="w-0.5 h-2/3 bg-[#00F5A0] animate-pulse" />
+                <span className="w-0.5 h-full bg-[#00F5A0] animate-bounce" style={{ animationDelay: '0.15s' }} />
+                <span className="w-0.5 h-1/2 bg-[#00F5A0] animate-pulse" />
               </div>
-              <span>VOCALIZANDO</span>
+              <span>HABLANDO</span>
             </div>
           ) : (
-            <span className="text-slate-400 text-[10px] px-2 py-0.5 rounded-full bg-slate-800/40 border border-slate-700/40">
+            <span className="text-slate-400 text-[10px] px-2 py-0.5 rounded-full bg-[#0A1711] border border-white/5">
               EN REPOSO
             </span>
           )}
@@ -285,20 +276,20 @@ export const NexusAvatar3D: React.FC<NexusAvatar3DProps> = ({
       />
 
       {/* Bottom Controls Bar */}
-      <div className="w-full z-10 flex items-center justify-between pt-2 border-t border-cyan-500/15">
+      <div className="w-full z-10 flex items-center justify-between pt-2 border-t border-[#00F5A0]/15">
         <div className="flex items-center gap-1.5">
           <button
             onClick={onToggleVoice}
             className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-mono text-xs transition-all ${
               voiceEnabled
-                ? 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/40 hover:bg-cyan-500/25'
-                : 'bg-slate-800/60 text-slate-400 border border-slate-700/50 hover:text-slate-200'
+                ? 'bg-[#00F5A0]/15 text-[#00F5A0] border border-[#00F5A0]/40 hover:bg-[#00F5A0]/25'
+                : 'bg-[#0E1A14] text-slate-400 border border-white/5 hover:text-slate-200'
             }`}
-            title={voiceEnabled ? 'Voz activada automáticamente' : 'Voz silenciada'}
+            title={voiceEnabled ? 'Voz activada' : 'Voz silenciada'}
           >
             {voiceEnabled ? (
               <>
-                <Volume2 className="w-3.5 h-3.5 text-cyan-400" />
+                <Volume2 className="w-3.5 h-3.5 text-[#00F5A0]" />
                 <span>Voz: Activa</span>
               </>
             ) : (
@@ -324,7 +315,7 @@ export const NexusAvatar3D: React.FC<NexusAvatar3DProps> = ({
         {onTestVoice && !isSpeaking && (
           <button
             onClick={onTestVoice}
-            className="flex items-center gap-1 text-[11px] font-mono text-cyan-400/90 hover:text-cyan-300 hover:underline transition-colors"
+            className="flex items-center gap-1 text-[11px] font-mono text-[#00F5A0] hover:text-[#5EFAC5] hover:underline transition-colors"
           >
             <Play className="w-3 h-3" />
             <span>Probar voz</span>
