@@ -1,0 +1,43 @@
+thedramasserver:$ mkdir Los_pollos_Hermanos
+thedramasserver:$ ls 
+thedramasserver:$ cd Los_pollos_Hermanos
+thedramasserver:/Los_pollos_Hermanos$ mkdir RH ventas Productos Almacen Compras 
+thedramasserver:/Los_pollos_Hermanos$ ls
+thedramasserver:/Los_pollos_Hermanos$ cd Almacen 
+thedramasserver:/Los_pollos_Hermanos/Almacen$  touch informacion.txt
+thedramasserver:/Los_pollos_Hermanos/Almacen$ cat informacion.txt 
+1. pollos:40
+2. Alitas:20
+3. Pechuga:30
+4. pata:1
+thedramasserver:/Los_pollos_Hermanos/Almacen$ cp informacion.txt Informacion2.txt
+thedramasserver:/Los_pollos_Hermanos/Almacen$ ls
+thedramasserver:/Los_pollos_Hermanos/Almacen$ mv Informacion.txt datos.txt
+thedramasserver:/Los_pollos_Hermanos/Almacen$ ls
+informacion.txt datos.txt
+thedramasserver:/Los_pollos_Hermanos/Almacen$ pwd 
+//salirse de el documento txt Ctrl + o -> guardar Ctrl + X -> salir 
+
+crear un respaldo de toda la empresa:
+tar -czvt respaldo.tar.gz Empresa/
+c=crear
+Z=comprimir
+v=ver lo que se esta haciendo 
+f=indica el nombre de el archovo 
+
+Recuperar respaldo :
+tar -xzvf respaldo.tar.gz 
+x= Extraer 
+z= Descomprimir
+v= Ver lo que se hace 
+f= usar el archivo indicado 
+
+terminal@terminal-temple ~ $ tar -czvf Respaldo_Pollos.tar.gz Los_Pollos_Hermanos
+
+vamo a eliminar la empresa RM - r eliminar absolutamente de toda nuestra informacion seguido de nuestra carpeta principal los pollos hermanos 
+terminal@terminal-temple ~ $ rm -r Los_Pollos_Hermanos
+terminal@terminal-temple ~ $ ls
+Documents       Downloads       Music           Pictures
+
+RECUPERAR:
+terminal@terminal-temple ~ $ tar -xzvf Respaldo_Pollos.tar.gz

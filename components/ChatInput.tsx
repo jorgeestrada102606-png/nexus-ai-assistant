@@ -1,0 +1,108 @@
+'use client';
+
+import React, { useState, useRef, useEffect, KeyboardEvent } from 'react';
+import { ArrowUp, Loader2, Volume2, VolumeX } from 'lucide-react';
+
+interface ChatInputProps {
+  onSendMessage: (message: string) => void;
+  isLoading: boolean;
+  disabled?: boolean;
+  voiceEnabled?: boolean;
+  onToggleVoice?: () => void;
+}
+
+export const ChatInput: React.FC<ChatInputProps> = ({
+  onSendMessage,
+  isLoading,
+  disabled = false,
+  voiceEnabled = true,
+  onToggleVoice,
+}) => {
+  const [input, setInput] = useState('');
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Auto-resize textarea
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 180)}px`;
+    }
+  }, [input]);
+
+  const handleSend = () => {
+    if (input.trim() && !isLoading && !disabled) {
+      onSendMessage(input.trim());
+      setInput('');
+      if (textareaRef.current) {
+        textareaRef.current.style.height = 'auto';
+      }
+    }
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
+
+  return (
+    <div className="w-full max-w-3xl mx-auto px-4 pb-4 pt-1 flex flex-col gap-2">
+      <div className="relative flex items-end gap-2 bg-[#0c1422] border border-cyan-950/80 hover:border-cyan-500/30 focus-within:border-cyan-400/60 focus-within:ring-2 focus-within:ring-cyan-500/20 rounded-2xl p-2.5 shadow-xl shadow-black/40 transition-all">
+        <textarea
+          ref={textareaRef}
+          rows={1}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          disabled={isLoading || disabled}
+          placeholder="Escriba una directiva para NEXUS... (Shift + Enter para nueva línea)"
+          className="flex-1 bg-transparent text-slate-100 placeholder-slate-500 text-sm focus:outline-none resize-none leading-relaxed py-1.5 px-2 max-h-44 disabled:opacity-50"
+        />
+
+        <div className="flex items-center gap-1.5 pb-0.5">
+          {onToggleVoice && (
+            <button
+              onClick={onToggleVoice}
+              type="button"
+              className={`p-2 rounded-xl transition-all ${
+                voiceEnabled
+                  ? 'text-cyan-400 hover:bg-cyan-500/10'
+                  : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'
+              }`}
+              title={voiceEnabled ? 'Voz activada: NEXUS vocalizará la respuesta' : 'Voz silenciada'}
+            >
+              {voiceEnabled ? (
+                <Volume2 className="w-4 h-4" />
+              ) : (
+                <VolumeX className="w-4 h-4" />
+              )}
+            </button>
+          )}
+
+          <button
+            onClick={handleSend}
+            disabled={!input.trim() || isLoading || disabled}
+            className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 disabled:from-slate-800 disabled:to-slate-800 text-slate-950 disabled:text-slate-500 flex items-center justify-center transition-all flex-shrink-0 active:scale-95 shadow-md shadow-cyan-500/20 disabled:shadow-none"
+            title="Transmitir a NEXUS"
+            aria-label="Transmitir a NEXUS"
+          >
+            {isLoading ? (
+              <Loader2 className="w-4 h-4 animate-spin text-cyan-200" />
+            ) : (
+              <ArrowUp className="w-4 h-4 stroke-[2.5]" />
+            )}
+          </button>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between text-[11px] text-slate-500 px-1 font-mono">
+        <span className="flex items-center gap-1.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+          <span>NEXUS // JARVIS PROTOCOL</span>
+        </span>
+        <span>Enter para enviar</span>
+      </div>
+    </div>
+  );
+};
